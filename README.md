@@ -1,59 +1,130 @@
 # Hon. Saidu Musa Abdullahi — Official Website
 
-A fast static website with a built-in admin panel at **`/admin`**, hosted on Vercel.
+The public website and its admin panel, in one Next.js app on Vercel.
 
-- **Site content** is stored in `content/`, in JSON and Markdown files.
-- **Admin panel:** [Decap CMS](https://decapcms.org) runs at `/admin`. Admins sign in with GitHub and edit text, photos, colours, projects and news in a form. Each save is committed to GitHub, and Vercel redeploys the site automatically in about a minute.
-- **Admin login:** two small serverless functions in `api/` handle the GitHub sign-in, so no third-party CMS account is needed.
-
-```
-content/          ← everything editable (site settings, about, agenda, projects/, news/)
-static/           ← copied as-is: admin panel, uploaded images (static/images)
-src/styles.css    ← site styles (brand colours come from content/site.json)
-build.mjs         ← generates dist/ from content/
-api/              ← GitHub login for the admin panel
-```
-
-## One-time setup (about 15 minutes)
-
-### 1. GitHub repository
-The code is hosted at [abdulrahman5/project-sma](https://github.com/abdulrahman5/project-sma), and `static/admin/config.yml` already points to it. If you move the repository, update `repo:` in that file.
-
-### 2. Deploy on Vercel
-1. Go to [vercel.com/new](https://vercel.com/new) and import the repository. Vercel reads `vercel.json`, so keep the default settings and click **Deploy**.
-2. Note the site address, for example `https://sma-website.vercel.app`. To add a custom domain such as `saidumusa.com`, go to **Settings → Domains**.
-
-### 3. Enable admin login (GitHub OAuth app)
-1. On GitHub, go to **Settings → Developer settings → OAuth Apps → New OAuth App**.
-   - **Homepage URL:** `https://YOUR-DOMAIN`
-   - **Authorization callback URL:** `https://YOUR-DOMAIN/api/callback`
-2. Copy the **Client ID** and generate a **Client Secret**.
-3. In Vercel, go to **Project → Settings → Environment Variables** and add:
-   - `GITHUB_CLIENT_ID` = the client ID
-   - `GITHUB_CLIENT_SECRET` = the client secret
-4. Redeploy (**Deployments → ⋯ → Redeploy**).
-
-> An OAuth app has only one callback URL. If you later move to a custom domain, update the callback URL to match.
-
-### 4. Add admins
-Each admin needs a free GitHub account. Add them to the repository under **Settings → Collaborators** with **Write** access. They can then go to `https://YOUR-DOMAIN/admin` and click **Login with GitHub**.
-
-## Using the admin panel
-
-| Section | What you can change |
+| Address | What it is |
 |---|---|
-| **Site Settings** | Name, party, brand colours, top banner text and portrait, key numbers, quote, contact details, social links, contact-form endpoint |
-| **About & Timeline** | Biography, photo, quick facts, milestones |
-| **Agenda / Priorities** | The priority cards and their icons |
-| **Projects** | Add, edit or remove constituency projects, with photos and categories |
-| **News & Press** | Write press releases; tick **Draft** to hide a post |
+| `yourdomain.com` | Public website (home, news, contact form) |
+| `yourdomain.com/admin` | Admin panel. Admins log in with their own email and password. |
 
-Text written in `[square brackets]` is placeholder text. It appears on the site with a gold dashed outline until it is replaced.
+```
+             yourdomain.com  ──►  Vercel (Next.js + Payload CMS)
+                                       │                 │
+                               Neon Postgres       Vercel Blob
+                        (content, admins, inbox)    (photos)
+                                       │
+                                    Resend (password-reset emails, contact-form alerts)
+```
 
-**Contact form:** create a free form at [formspree.io](https://formspree.io), then paste its URL into **Site Settings → Contact form endpoint**. Messages will then arrive by email.
+## What admins can do
 
-## Local development
+| Admin section | Contents |
+|---|---|
+| **Website → Site settings** | Name, party, **brand colours**, top banner and portrait, key numbers, quote, contact details, social links, link-preview image |
+| **Website → About & timeline** | Biography, photo, quick facts, milestones |
+| **Website → Agenda / priorities** | Priority cards and icons |
+| **Website → Projects** | Constituency projects with photos and categories |
+| **Website → News & press** | Press releases with cover photos. Can be saved as drafts. |
+| **Website → Photo library** | All uploaded photos, resized automatically |
+| **Inbox** | Contact-form messages. Mark them New / In progress / Handled, add notes, or download them all as CSV. |
+| **Administration → Admin users** | Add or remove admins (Super Admins only) |
+
+**Roles**
+- **Super Admin:** everything, including managing admin users. The first account you create is automatically a Super Admin.
+- **Editor:** all content, settings and the Inbox.
+- **Contributor:** writes drafts of news and projects but cannot publish them, delete anything, or see the Inbox.
+
+When you click **Save** or **Publish**, the change appears on the live site immediately. Text written in `[square brackets]` is starter placeholder text. It shows on the site with a gold dashed outline until someone replaces it.
+
+**Security built in**
+- Passwords must be at least 10 characters.
+- An account locks for 15 minutes after 5 failed logins.
+- Sessions expire after 8 hours.
+- Admins can't change their own role.
+- Only website visitors can create messages, through the form. The API cannot be used to create them.
+- Spam traps on the contact form.
+- No SVG uploads.
+- CSV exports are protected against spreadsheet formula injection.
+
+---
+
+## Deploying (one-time setup)
+
+You need free accounts on **Vercel**, **Neon** and **Resend**. The code is in [abdulrahman5/project-sma](https://github.com/abdulrahman5/project-sma).
+
+### 1. Create the Vercel project
+1. Go to [vercel.com/new](https://vercel.com/new) and import `abdulrahman5/project-sma`. Vercel detects Next.js automatically.
+2. **Don't deploy yet.** First add the database and environment variables (steps 2–4). If the first deploy fails because they're missing, that's fine: just redeploy after adding them.
+
+### 2. Database (Neon)
+1. In the Vercel project, go to **Storage → Create Database → Neon (Postgres)**, choose the region closest to Nigeria (e.g. Frankfurt), and connect it to the project.
+2. Vercel adds `DATABASE_URL` for you. If you created the database directly on neon.tech instead, copy its **pooled** connection string into a `DATABASE_URL` variable.
+
+### 3. Photo storage (Vercel Blob)
+In the Vercel project, go to **Storage → Create → Blob** and connect it to the project. Vercel adds `BLOB_READ_WRITE_TOKEN` automatically.
+
+### 4. Environment variables
+Go to **Settings → Environment Variables** and add:
+
+| Name | Value |
+|---|---|
+| `PAYLOAD_SECRET` | A long random string, e.g. the output of `openssl rand -hex 32`, or 64 random letters and numbers. Keep it secret and never change it. |
+| `RESEND_API_KEY` | From [resend.com](https://resend.com) → API Keys |
+| `EMAIL_FROM_ADDRESS` | `onboarding@resend.dev` for now. After launch, use e.g. `noreply@yourdomain.com` (see step 7). |
+| `EMAIL_FROM_NAME` | `Office of Hon. Saidu Musa Abdullahi` |
+
+### 5. Deploy
+Click **Deploy**, or redeploy. The build automatically:
+1. creates the database tables, and
+2. on the very first deploy only, loads the starter content: bio, agenda, sample projects and news.
+
+### 6. Create the first admin
+Open `https://<your-project>.vercel.app/admin`. You'll see a **Create first user** screen, and that account becomes the Super Admin. Then add other admins under **Administration → Admin users**.
+
+Next, in **Site settings → Contact & social**, set **Send contact-form alerts to** to the office email address.
+
+> Until a custom domain is attached, search engines are told **not** to index the site, so the `.vercel.app` address won't appear in Google.
+
+---
+
+## Before launch
+
+- [ ] **Upgrade to Vercel Pro.** The Hobby plan is for non-commercial use only.
+- [ ] **Attach the domain.** In Vercel, go to **Settings → Domains** and add `yourdomain.com` and `www.yourdomain.com`. Then create the DNS records Vercel shows you at your registrar. HTTPS is set up automatically.
+  - Nothing else needs to change. The site picks up the new domain on its next deploy, and search indexing switches on, so **redeploy once** after the domain is attached.
+- [ ] **Set up email on your domain.** In Resend, go to **Domains → Add domain**, add the DNS records it gives you, then set `EMAIL_FROM_ADDRESS` to e.g. `noreply@yourdomain.com` and redeploy. Until you do, Resend only delivers to the email address you signed up with.
+- [ ] Replace all `[placeholder]` text, upload photos, set the brand colours, and delete the sample projects and news.
+- [ ] Check every admin account has a strong password, and remove any test accounts.
+
+---
+
+## For developers
+
 ```bash
+cp .env.example .env        # then fill in DATABASE_URL and PAYLOAD_SECRET
 npm install
-npm run dev     # builds and serves on http://localhost:3000
+npm run migrate             # create tables
+npm run seed                # load starter content (first time only)
+npm run dev                 # http://localhost:3000 and /admin
+```
+
+Without `BLOB_READ_WRITE_TOKEN`, uploads are saved to `./media`. Without `RESEND_API_KEY`, emails are printed to the console.
+
+**Changing content fields:** after editing anything in `src/collections` or `src/globals`, run:
+```bash
+npm run generate:types && npm run generate:importmap
+npm run migrate:create <short-name>   # commit the new file in src/migrations
+```
+Migrations run automatically on every Vercel deploy (`npm run build` = migrate → seed-if-empty → `next build`).
+
+```
+src/
+  payload.config.ts        admin/CMS configuration
+  access.ts                roles and permissions
+  collections/             News, Projects, Media, Messages (Inbox), Users
+  globals/                 Site settings, About, Agenda
+  migrations/              database schema history
+  app/(frontend)/          public website pages and styles
+  app/(payload)/           admin panel and API (generated by Payload, don't edit)
+  seed/index.ts            starter-content loader  ← seed/data/
 ```

@@ -1,4 +1,4 @@
-/* Brand colours (--brand, --accent) are injected from content/site.json at build time. */
+/* Brand colours (--brand, --accent) are injected from Site settings by layout.tsx. */
 :root{
   --green:var(--brand);
   --green-deep:color-mix(in srgb,var(--brand) 62%,#000);
@@ -178,7 +178,10 @@ textarea{min-height:110px;resize:vertical}
 .contact-list li{display:flex;gap:14px;align-items:flex-start}
 .contact-list .icon{margin:0;flex-shrink:0;width:44px;height:44px}
 .contact-list span{color:var(--muted)}
-.form-msg{display:none;color:var(--green);font-weight:600}
+.form-msg{color:var(--green);font-weight:600}
+.form-msg.error{color:#c0392b}
+form{position:relative}
+button:disabled{opacity:.6;cursor:wait}
 @media (max-width:900px){.involve{grid-template-columns:1fr}.row{grid-template-columns:1fr}}
 
 footer{background:var(--green-deep);color:rgba(255,255,255,.75);padding:50px 0 30px;font-size:.92rem}
