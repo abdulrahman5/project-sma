@@ -2,7 +2,7 @@
 # and Vercel automatically rebuilds the live site (about 1 minute).
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/sma-website   # <-- change to your GitHub repo
+  repo: abdulrahman5/project-sma
   branch: main
   commit_messages:
     create: "Create {{collection}} “{{slug}}”"

@@ -16,14 +16,8 @@ api/              ← GitHub login for the admin panel
 
 ## One-time setup (about 15 minutes)
 
-### 1. Put the code on GitHub
-1. Create a new **private** repository on GitHub, for example `sma-website`.
-2. In `static/admin/config.yml`, set `repo: YOUR-GITHUB-USERNAME/sma-website` to your repository.
-3. Push this folder:
-   ```bash
-   git remote add origin https://github.com/YOUR-GITHUB-USERNAME/sma-website.git
-   git push -u origin main
-   ```
+### 1. GitHub repository
+The code is hosted at [abdulrahman5/project-sma](https://github.com/abdulrahman5/project-sma), and `static/admin/config.yml` already points to it. If you move the repository, update `repo:` in that file.
 
 ### 2. Deploy on Vercel
 1. Go to [vercel.com/new](https://vercel.com/new) and import the repository. Vercel reads `vercel.json`, so keep the default settings and click **Deploy**.
