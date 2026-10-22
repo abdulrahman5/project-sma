@@ -1,0 +1,12 @@
+{
+  "heading": "Priorities for our people",
+  "intro": "The pillars guiding SMA's work in the National Assembly and across the constituency.",
+  "items": [
+    { "icon": "education", "title": "Education", "text": "Scholarships, school renovations and support for teachers so every child in the constituency can learn." },
+    { "icon": "health", "title": "Healthcare", "text": "Equipping primary health centres and expanding access to maternal and child care." },
+    { "icon": "agriculture", "title": "Agriculture", "text": "Inputs, mechanisation and market access for farmers across Bida, Gbako and Katcha." },
+    { "icon": "jobs", "title": "Youth & Jobs", "text": "Skills acquisition, start-up grants and empowerment programmes for young people and women." },
+    { "icon": "infrastructure", "title": "Infrastructure", "text": "Roads, electrification and clean water projects that connect communities." },
+    { "icon": "finance", "title": "Fiscal Responsibility", "text": "Using his role on the Finance Committee to push for transparent, people-focused budgets." }
+  ]
+}

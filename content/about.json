@@ -1,0 +1,18 @@
+{
+  "heading": "A son of Bida, a voice for Nupeland.",
+  "image": "",
+  "body": "Born on 31 May 1979 in Bida, Niger State, Hon. Saidu Musa Abdullahi grew up in a family devoted to public service. His father is a retired Chief Judge of Niger State.\n\nIn 2019 he was elected on the platform of the All Progressives Congress (APC) to represent the Bida/Gbako/Katcha Federal Constituency in the House of Representatives, and was returned for a second term in 2023. He serves as Vice Chairman of the House Committee on Finance, where he works on Nigeria's fiscal and budget legislation.\n\nIn recognition of his service, the Etsu Nupe conferred on him the traditional title of Dan-Barije Nupe, later elevated to **Gorozon of Nupe Kingdom**.",
+  "facts": [
+    { "label": "Office", "value": "Member, House of Reps" },
+    { "label": "Constituency", "value": "Bida/Gbako/Katcha" },
+    { "label": "Committee", "value": "Vice Chairman, Finance" },
+    { "label": "Party", "value": "APC" }
+  ],
+  "timeline": [
+    { "year": "1979", "title": "Born in Bida", "text": "Born on 31 May in Bida, Niger State." },
+    { "year": "[Year]", "title": "Education", "text": "[Schools attended and qualifications]" },
+    { "year": "[Year]", "title": "Career before politics", "text": "[Professional background]" },
+    { "year": "2019", "title": "Elected to the House of Representatives", "text": "Elected on the APC platform to represent Bida/Gbako/Katcha Federal Constituency; honoured with a Nupe traditional title." },
+    { "year": "2023", "title": "Re-elected for a second term", "text": "Returned by constituents; serves as Vice Chairman, House Committee on Finance." }
+  ]
+}

@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Website Admin</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<script>window.CMS_MANUAL_INIT = true;</script>
+<script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+<script>
+  // Login goes through this site's own /api/auth, so base_url is always the current domain
+  // (works on the .vercel.app URL, preview deployments, and the custom domain alike).
+  CMS.init({ config: { backend: { base_url: window.location.origin, auth_endpoint: 'api/auth' } } });
+</script>
+</body>
+</html>

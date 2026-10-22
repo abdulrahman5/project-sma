@@ -1,0 +1,41 @@
+{
+  "name": "Hon. Saidu Musa Abdullahi",
+  "shortName": "SMA",
+  "office": "Member, House of Representatives",
+  "constituency": "Bida/Gbako/Katcha Federal Constituency",
+  "state": "Niger State",
+  "party": "All Progressives Congress (APC)",
+  "siteUrl": "https://YOUR-SITE.vercel.app",
+  "seoDescription": "Official website of Hon. Saidu Musa Abdullahi (SMA), Member, House of Representatives, Bida/Gbako/Katcha Federal Constituency, Niger State.",
+  "colors": {
+    "primary": "#0b5d3b",
+    "accent": "#c8a13a"
+  },
+  "hero": {
+    "badge": "Member, House of Representatives · Niger State",
+    "headline": "Representation that",
+    "highlight": "delivers.",
+    "intro": "Hon. Saidu Musa Abdullahi (SMA) has served the people of Bida, Gbako and Katcha in the National Assembly since 2019, working for jobs, education, healthcare and infrastructure at home.",
+    "image": ""
+  },
+  "stats": [
+    { "value": "2019", "label": "Elected to the House" },
+    { "value": "2nd", "label": "Term in office" },
+    { "value": "[00+]", "label": "Constituency projects" },
+    { "value": "[0,000+]", "label": "Beneficiaries empowered" }
+  ],
+  "quote": "[A signature quote from Hon. Saidu Musa Abdullahi about service to his people.]",
+  "contact": {
+    "address": "[Constituency office address, Bida, Niger State]",
+    "email": "[office@example.com]",
+    "phone": "[+234 ...]"
+  },
+  "socials": {
+    "facebook": "",
+    "x": "",
+    "instagram": "",
+    "youtube": "",
+    "tiktok": ""
+  },
+  "formEndpoint": ""
+}
