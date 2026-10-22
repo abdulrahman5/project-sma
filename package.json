@@ -6,7 +6,7 @@
   "description": "Official website of Hon. Saidu Musa Abdullahi, with built-in admin (Payload CMS)",
   "scripts": {
     "dev": "next dev",
-    "build": "payload migrate && payload run src/seed/index.ts && next build",
+    "build": "node scripts/build.mjs",
     "start": "next start",
     "seed": "payload run src/seed/index.ts",
     "migrate": "payload migrate",

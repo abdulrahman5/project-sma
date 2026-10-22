@@ -115,7 +115,7 @@ Without `BLOB_READ_WRITE_TOKEN`, uploads are saved to `./media`. Without `RESEND
 npm run generate:types && npm run generate:importmap
 npm run migrate:create <short-name>   # commit the new file in src/migrations
 ```
-Migrations run automatically on every Vercel deploy (`npm run build` = migrate → seed-if-empty → `next build`).
+Migrations run automatically on every **production** deploy (`npm run build` = migrate → seed-if-empty → `next build`, see `scripts/build.mjs`). Preview deployments of other branches skip the database steps, so they never change the live database.
 
 ```
 src/

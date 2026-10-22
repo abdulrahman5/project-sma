@@ -21,18 +21,33 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 // Vercel's Neon integration provides DATABASE_URL (pooled); POSTGRES_URL is accepted as a fallback.
-const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || ''
+const databaseUrl = (process.env.DATABASE_URL || process.env.POSTGRES_URL || '').trim()
 
 // On Vercel, fail early with a clear message instead of a confusing "cannot connect to 127.0.0.1" error.
 if (process.env.VERCEL) {
+  const fix = 'Fix it in Vercel → Project → Settings → Environment Variables (tick Production), then redeploy.'
   const missing = [!databaseUrl && 'DATABASE_URL', !process.env.PAYLOAD_SECRET && 'PAYLOAD_SECRET'].filter(Boolean)
   if (missing.length) {
     throw new Error(
-      `Missing environment variable(s): ${missing.join(', ')}. ` +
-        'Add them in Vercel → Project → Settings → Environment Variables (tick Production), then redeploy. ' +
+      `Missing environment variable(s): ${missing.join(', ')}. ${fix} ` +
         'DATABASE_URL is added automatically when a Neon database is connected in the Storage tab.',
     )
   }
+  let host = ''
+  try {
+    const u = new URL(databaseUrl)
+    if (!/^postgres(ql)?:$/.test(u.protocol)) throw new Error()
+    host = u.hostname
+  } catch {
+    throw new Error(
+      `DATABASE_URL is not a valid connection string (it starts with "${databaseUrl.slice(0, 12)}…"). ` +
+        `It must start with postgresql:// — paste only the connection string, without "psql", quotes or "DATABASE_URL=". ${fix}`,
+    )
+  }
+  if (!host || /^(localhost|127\.0\.0\.1|::1)$/.test(host)) {
+    throw new Error(`DATABASE_URL points to "${host || 'localhost'}", which only exists on a developer's computer. Use your Neon connection string. ${fix}`)
+  }
+  console.log(`Database host: ${host}`)
 }
 
 export default buildConfig({
