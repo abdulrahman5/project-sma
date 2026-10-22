@@ -20,6 +20,21 @@ import { getSiteUrl } from './lib/site-url'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
+// Vercel's Neon integration provides DATABASE_URL (pooled); POSTGRES_URL is accepted as a fallback.
+const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL || ''
+
+// On Vercel, fail early with a clear message instead of a confusing "cannot connect to 127.0.0.1" error.
+if (process.env.VERCEL) {
+  const missing = [!databaseUrl && 'DATABASE_URL', !process.env.PAYLOAD_SECRET && 'PAYLOAD_SECRET'].filter(Boolean)
+  if (missing.length) {
+    throw new Error(
+      `Missing environment variable(s): ${missing.join(', ')}. ` +
+        'Add them in Vercel → Project → Settings → Environment Variables (tick Production), then redeploy. ' +
+        'DATABASE_URL is added automatically when a Neon database is connected in the Storage tab.',
+    )
+  }
+}
+
 export default buildConfig({
   serverURL: getSiteUrl(),
   admin: {
@@ -44,7 +59,7 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },
   db: postgresAdapter({
-    pool: { connectionString: process.env.DATABASE_URL || '' },
+    pool: { connectionString: databaseUrl },
     // Schema changes always go through migrations (src/migrations), locally and in production.
     push: false,
     migrationDir: path.resolve(dirname, 'migrations'),
