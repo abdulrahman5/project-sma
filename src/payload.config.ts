@@ -11,10 +11,12 @@ import { Media } from './collections/Media'
 import { Messages } from './collections/Messages'
 import { News } from './collections/News'
 import { Projects } from './collections/Projects'
+import { SocialPosts } from './collections/SocialPosts'
 import { Users } from './collections/Users'
 import { About } from './globals/About'
 import { Agenda } from './globals/Agenda'
 import { SiteSettings } from './globals/SiteSettings'
+import { SocialSettings } from './globals/SocialSettings'
 import { getSiteUrl } from './lib/site-url'
 
 const filename = fileURLToPath(import.meta.url)
@@ -68,8 +70,8 @@ export default buildConfig({
       },
     },
   },
-  collections: [News, Projects, Media, Messages, Users],
-  globals: [SiteSettings, About, Agenda],
+  collections: [News, SocialPosts, Projects, Media, Messages, Users],
+  globals: [SiteSettings, About, Agenda, SocialSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

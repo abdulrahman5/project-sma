@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     news: News;
+    'social-posts': SocialPost;
     projects: Project;
     media: Media;
     messages: Message;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     news: NewsSelect<false> | NewsSelect<true>;
+    'social-posts': SocialPostsSelect<false> | SocialPostsSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     messages: MessagesSelect<false> | MessagesSelect<true>;
@@ -97,11 +99,13 @@ export interface Config {
     'site-settings': SiteSetting;
     about: About;
     agenda: Agenda;
+    'social-settings': SocialSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
     agenda: AgendaSelect<false> | AgendaSelect<true>;
+    'social-settings': SocialSettingsSelect<false> | SocialSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -220,6 +224,32 @@ export interface Media {
   };
 }
 /**
+ * Shown in the News section alongside press releases. Facebook and Instagram posts are imported automatically; to add an X post, click "Create new" and paste its link. Tick "Hide from website" to remove a post from the site.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-posts".
+ */
+export interface SocialPost {
+  id: number;
+  title?: string | null;
+  platform: 'facebook' | 'instagram' | 'x';
+  /**
+   * For X, paste the post link and save — the text is fetched automatically.
+   */
+  url: string;
+  /**
+   * Filled in automatically for imported posts.
+   */
+  text?: string | null;
+  image?: (number | null) | Media;
+  postedAt: string;
+  hidden?: boolean | null;
+  source?: ('imported' | 'manual') | null;
+  externalId?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Constituency projects shown in the Impact section of the home page.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -325,6 +355,10 @@ export interface PayloadLockedDocument {
         value: number | News;
       } | null)
     | ({
+        relationTo: 'social-posts';
+        value: number | SocialPost;
+      } | null)
+    | ({
         relationTo: 'projects';
         value: number | Project;
       } | null)
@@ -396,6 +430,23 @@ export interface NewsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-posts_select".
+ */
+export interface SocialPostsSelect<T extends boolean = true> {
+  title?: T;
+  platform?: T;
+  url?: T;
+  text?: T;
+  image?: T;
+  postedAt?: T;
+  hidden?: T;
+  source?: T;
+  externalId?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -694,6 +745,30 @@ export interface Agenda {
   createdAt?: string | null;
 }
 /**
+ * Facebook and Instagram posts are imported automatically once a day, or when you click "Sync now" on the Social posts page. The connection itself (Page ID and access token) is configured by the site administrator in Vercel.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-settings".
+ */
+export interface SocialSetting {
+  id: number;
+  importFacebook?: boolean | null;
+  importInstagram?: boolean | null;
+  lastSyncAt?: string | null;
+  lastSyncSummary?: string | null;
+  ignoredIds?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -788,6 +863,20 @@ export interface AgendaSelect<T extends boolean = true> {
         text?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-settings_select".
+ */
+export interface SocialSettingsSelect<T extends boolean = true> {
+  importFacebook?: T;
+  importInstagram?: T;
+  lastSyncAt?: T;
+  lastSyncSummary?: T;
+  ignoredIds?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
